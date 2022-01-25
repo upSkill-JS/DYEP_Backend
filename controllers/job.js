@@ -1,4 +1,5 @@
 import JobModel from "../models/jobModel.js";
+import mongoose from "mongoose";
 
 export const createJob = async (req, res) => {
     const { title, job_profile } = req.body;
@@ -26,6 +27,8 @@ export const getJobs = async(req, res) => {
 export const getJob = async(req, res) => {
     const { id } = req.params;
 
+    // if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);  
+
     try {
         const specificJob = await JobModel.findById(id);
 
@@ -42,8 +45,12 @@ export const updateJob = async(req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
-    await JobModel.findByIdAndUpdate(id, req.body, { new: true })  // Significance of passing new : true ? 
-    
+    await JobModel.findByIdAndUpdate(id, req.body, { new: true })  
+    /* Significance of passing { new : true } =>
+       => By default mongoose will return the record before update, In reality we want the record after updating
+       => So by passing this alias { new: true } we are telling mongoose to return the record to us after updating.
+    */  
+       
     res.json( updateJob );
 }
 

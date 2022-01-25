@@ -1,4 +1,5 @@
 import JobModel from "../models/jobModel.js";
+import mongoose from "mongoose";
 
 export const deleteJob = async(req, res) => {
     const { id } = req.params;
