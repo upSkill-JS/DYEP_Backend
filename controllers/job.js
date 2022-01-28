@@ -1,4 +1,5 @@
 import JobModel from "../models/jobModel.js";
+import CategoryModel from "../models/category.js";
 import mongoose from "mongoose";
 
 export const createJob = async (req, res) => {
@@ -27,15 +28,11 @@ export const getJobs = async(req, res) => {
 export const getJob = async(req, res) => {
     const { id } = req.params;
 
-    // if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);  
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);  
 
-    try {
-        const specificJob = await JobModel.findById(id);
+    const specificJob = await JobModel.findById(id);
 
-        res.status(200).json(specificJob);
-    } catch (error){
-        res.status(404).json(error);
-    }
+    res.status(200).json(specificJob);   
 }
 
 export const updateJob = async(req, res) => {
@@ -53,4 +50,16 @@ export const updateJob = async(req, res) => {
        
     res.json( updateJob );
 }
+
+export const jobCreate = (req, res) => {
+    console.log("working");
+    const body = req.body;
+    const { categories, ...others } = body;
+
+    // const newCategory = new CategoryModel(categories);
+    // const newLocation = new Location(req.body.location);
+    res.json({ others : others, categories: categories  });
+
+
+} 
 

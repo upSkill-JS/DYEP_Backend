@@ -41,6 +41,7 @@ module.exports = router;
 // In database I have to learn about primary and foreign key and its equivalent in MongoDB as _id and reference
 // reference in mongoDB is useful for better schema design 
 // $lookup -- to join different collections in mongoDB Database
+
 // $populate -- alternative for $lookup in mongoose ODM used for referencing collections in mongoDB Database
 // aggregation query in Mongoose for dabase computation
 
