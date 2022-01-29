@@ -2,7 +2,8 @@ import JobModel from "../models/jobModel.js";
 import CategoryModel from "../models/category.js";
 import mongoose from "mongoose";
 
-export const createJob = async (req, res) => {
+
+/* bexport const createJob = async (req, res) => {
     const { title, job_profile } = req.body;
 
     const newJobModel = new JobModel({ title, job_profile });
@@ -13,11 +14,15 @@ export const createJob = async (req, res) => {
     } catch (error) {
         res.status(404).json({ message: error.message })
     }
-} 
+} */
 
 export const getJobs = async(req, res) => {
     try {
-        const JobInfo = await JobModel.find();
+        const JobInfo = await JobModel
+        .find()
+        .select("title job_profile categories")
+        .populate("categories")
+        .exec();
 
         res.status(200).json(JobInfo);
     } catch (error) {
@@ -51,15 +56,23 @@ export const updateJob = async(req, res) => {
     res.json( updateJob );
 }
 
-export const jobCreate = (req, res) => {
-    console.log("working");
+export const jobCreate = async (req, res) => {
+    // console.log("working");
     const body = req.body;
     const { categories, ...others } = body;
 
-    // const newCategory = new CategoryModel(categories);
-    // const newLocation = new Location(req.body.location);
-    res.json({ others : others, categories: categories  });
+    const newCategory = new CategoryModel({ category : categories }); // save -> document -> _id -> JobMode
+    const newJob = new JobModel(others);
 
-
+    // Save to DB
+    try {
+        const savedCategory = await newCategory.save();
+        const id = savedCategory._id;
+        newJob.categories = id;
+        const savedJob = await newJob.save();
+        res.json({ savedJob, newCategory, categories, others });
+    } catch(err) {
+        res.status(500).json({ message : err.message });
+    }
 } 
 

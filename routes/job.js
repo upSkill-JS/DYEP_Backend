@@ -1,10 +1,10 @@
 import express from 'express';
-import { createJob, getJobs, getJob, updateJob, jobCreate } from '../controllers/job.js';
+import { getJobs, getJob, updateJob, jobCreate } from '../controllers/job.js';
 import { deleteJob } from '../controllers/deleteJob.js';
 
 const router = express.Router();
 
-router.post('/', createJob )
+// router.post('/', createJob )
 
 router.get('/', getJobs )
 

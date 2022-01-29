@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import jobRoute from './routes/job.js';
+import userRoute from './routes/user.js';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(cors())
 
 // Job Routes
 app.use('/job', jobRoute)
+app.use('/user', userRoute)
 
 // Connecting to the database...
 mongoose.connect( process.env.CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
