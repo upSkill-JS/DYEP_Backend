@@ -1,9 +1,10 @@
 import JobModel from "../models/jobModel.js";
 import CategoryModel from "../models/category.js";
 import mongoose from "mongoose";
+import LocationModel from "../models/locationModel.js";
 
 
-/* bexport const createJob = async (req, res) => {
+/* export const createJob = async (req, res) => {
     const { title, job_profile } = req.body;
 
     const newJobModel = new JobModel({ title, job_profile });
@@ -22,6 +23,7 @@ export const getJobs = async(req, res) => {
         .find()
         .select("title job_profile categories")
         .populate("categories")
+        .populate("location")
         .exec();
 
         res.status(200).json(JobInfo);
@@ -56,23 +58,44 @@ export const updateJob = async(req, res) => {
     res.json( updateJob );
 }
 
-export const jobCreate = async (req, res) => {
-    // console.log("working");
-    const body = req.body;
-    const { categories, ...others } = body;
+// export const jobCreate = async (req, res) => {
+//     // console.log("working");
+//     const body = req.body;
+//     const { categories, ...others } = body;
 
+//     const newCategory = new CategoryModel({ category : categories }); // save -> document -> _id -> JobMode
+//     const newJob = new JobModel(others);
+
+//     // Save to DB
+//     try {
+//         const savedCategory = await newCategory.save();
+//         const id = savedCategory._id;
+//         newJob.categories = id;
+//         const savedJob = await newJob.save();
+//         res.json({ savedJob, newCategory, categories, others });
+//     } catch(err) {
+//         res.status(500).json({ message : err.message });
+//     }
+// } 
+
+export const jobCreate = async (req, res) => {
+    const body = req.body;
+    const { location, categories, ...others } = body;
+
+    const newLocation = new LocationModel(location);
     const newCategory = new CategoryModel({ category : categories }); // save -> document -> _id -> JobMode
     const newJob = new JobModel(others);
 
     // Save to DB
     try {
+        const savedLocation = await newLocation.save();
         const savedCategory = await newCategory.save();
         const id = savedCategory._id;
         newJob.categories = id;
+        newJob.location = savedLocation._id
         const savedJob = await newJob.save();
-        res.json({ savedJob, newCategory, categories, others });
+        res.json({ savedJob, newCategory, savedLocation });
     } catch(err) {
         res.status(500).json({ message : err.message });
     }
-} 
-
+}
