@@ -1,6 +1,6 @@
 import express from 'express';
-import { getJobs, getJob, updateJob, jobCreate } from '../controllers/job.js';
-import { deleteJob } from '../controllers/deleteJob.js';
+import { getJobs, getJob, updateJob, jobCreate, deleteJob } from '../controllers/job.js';
+import { verifyTokenAndAdmin } from '../controllers/verifyToken.js';
 
 const router = express.Router();
 
@@ -10,10 +10,10 @@ router.get('/', getJobs )
 
 router.get('/:id', getJob )
 
-router.put('/:id', updateJob )
+router.put('/:id', verifyTokenAndAdmin, updateJob )
 
-router.delete('/:id', deleteJob)
+router.delete('/:id', verifyTokenAndAdmin, deleteJob)
 
-router.post('/jobCreate', jobCreate)
+router.post('/jobCreate', verifyTokenAndAdmin, jobCreate)
 
 export default router;

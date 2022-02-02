@@ -8,14 +8,31 @@ import userRoute from './routes/user.js';
 
 const app = express();
 
+app.set('view engine', 'ejs');
+
 dotenv.config();
 
 app.use(bodyParser.json({ extended: true }))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
+// Form Stuff
 
-// Job Routes
+// Static Files
+
+// Setup Views
+
+
+// Routes
+app.get('/', (req, res) => {
+    res.render('index');
+})
+app.get('/about', (req, res) => {
+    res.render('about');
+})
+app.get('*', (req, res) => {
+    res.render('404');
+})
 app.use('/job', jobRoute)
 app.use('/user', userRoute)
 

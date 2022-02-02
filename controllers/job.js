@@ -3,7 +3,7 @@ import CategoryModel from "../models/category.js";
 import mongoose from "mongoose";
 
 
-/* bexport const createJob = async (req, res) => {
+/* export const createJob = async (req, res) => {
     const { title, job_profile } = req.body;
 
     const newJobModel = new JobModel({ title, job_profile });
@@ -15,6 +15,25 @@ import mongoose from "mongoose";
         res.status(404).json({ message: error.message })
     }
 } */
+export const jobCreate = async (req, res) => {
+    // console.log("working");
+    const body = req.body;
+    const { categories, ...others } = body;
+
+    const newCategory = new CategoryModel({ category : categories }); // save -> document -> _id -> JobMode
+    const newJob = new JobModel(others);
+
+    // Save to DB
+    try {
+        const savedCategory = await newCategory.save();
+        const id = savedCategory._id;
+        newJob.categories = id;
+        const savedJob = await newJob.save();
+        res.json({ savedJob, newCategory, categories, others });
+    } catch(err) {
+        res.status(500).json({ message : err.message });
+    }
+} 
 
 export const getJobs = async(req, res) => {
     try {
@@ -42,6 +61,7 @@ export const getJob = async(req, res) => {
 
 export const updateJob = async(req, res) => {
     const { id } = req.params;
+    
     const { title, job_profile } = req.body;
     const updateJob = { title, job_profile }; 
 
@@ -56,23 +76,13 @@ export const updateJob = async(req, res) => {
     res.json( updateJob );
 }
 
-export const jobCreate = async (req, res) => {
-    // console.log("working");
-    const body = req.body;
-    const { categories, ...others } = body;
+export const deleteJob = async(req, res) => {
+    const { id } = req.params;
 
-    const newCategory = new CategoryModel({ category : categories }); // save -> document -> _id -> JobMode
-    const newJob = new JobModel(others);
+    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
 
-    // Save to DB
-    try {
-        const savedCategory = await newCategory.save();
-        const id = savedCategory._id;
-        newJob.categories = id;
-        const savedJob = await newJob.save();
-        res.json({ savedJob, newCategory, categories, others });
-    } catch(err) {
-        res.status(500).json({ message : err.message });
-    }
-} 
+    await JobModel.findOneAndDelete(id);
+
+    res.json({ message: " Resource successfully deleted"});
+}
 
