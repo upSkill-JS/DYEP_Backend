@@ -20,7 +20,7 @@ export const jobCreate = async (req, res) => {
     newJob.categories = id;
     newJob.location = savedLocation._id;
     const savedJob = await newJob.save();
-    res.json({ savedJob, newCategory, savedLocation });
+    res.json({ savedJob, savedCategory, savedLocation });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
