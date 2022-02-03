@@ -37,6 +37,7 @@ app.use('/job', jobRoute)
 app.use('/user', userRoute)
 
 // Connecting to the database...
-mongoose.connect( process.env.CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+// mongoose.connect( process.env.CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+    mongoose.connect('mongodb://localhost:27017/empDB', {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => app.listen(process.env.PORT || 5000, () => console.log(`Success : Server running on port : http://localhost:${process.env.PORT}`)))
     .catch((error) => console.log(`${error.message} did not connect`));
