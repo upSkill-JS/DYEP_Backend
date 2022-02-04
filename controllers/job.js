@@ -35,7 +35,9 @@ export const getJobs = async (req, res) => {
       .populate("location")
       .exec();
 
-    res.status(200).json(JobInfo);
+    //res.status(200).json(JobInfo);
+    // console.log(JobInfo);
+    res.render('index', { jobs: JobInfo });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }

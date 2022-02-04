@@ -4,7 +4,6 @@ import { verifyTokenAndAdmin } from '../controllers/verifyToken.js';
 
 const router = express.Router();
 
-// router.post('/', createJob )
 
 router.get('/', getJobs )
 

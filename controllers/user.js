@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 
 // REGISTRATION
 export const createUser = async (req, res) => {
+  // console.log(req.body);
   const username = req.body.username;
   const email = req.body.email;
   const password = CryptoJS.AES.encrypt(
@@ -16,9 +17,11 @@ export const createUser = async (req, res) => {
 
   try {
     await newUserModel.save(); // CRYPTO-JS
-    res.status(200).json(newUserModel);
+    // res.status(200).json(newUserModel);
+    res.redirect('/login');
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    // res.status(404).json({ message: error.message });
+    console.log({ message: error.message });
   }
 };
 
@@ -26,31 +29,40 @@ export const createUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const user = await UserModel.findOne({ username: req.body.username });
-    !user && res.status(401).json("Wrong Credentials!");
+    // console.log(user);
+    // !user && res.status(500).json("Wrong Credentials!"); 
 
     const originalPassword = CryptoJS.AES.decrypt(
       user.password,
       process.env.PASS_SEC
     ).toString(CryptoJS.enc.Utf8);
 
-    originalPassword !== req.body.password &&
-      res.status(500).json("Wrong Credentials!");
+    // console.log(originalPassword, req.body.password);
 
-    const accessToken = jwt.sign(
-      {
-        id: user._id,
-        isAdmin: user.isAdmin,
-      },
-      process.env.JWT_SEC,
-      { expiresIn: "3d" }
-    );
+    if (originalPassword === req.body.password){
+      const accessToken = jwt.sign(
+        {
+          id: user._id,
+          isAdmin: user.isAdmin,
+        },
+        process.env.JWT_SEC,
+        { expiresIn: "3d" }
+      );
+  
+      // console.log(accessToken);  
+      res.status(200).redirect("/job")
+    }
 
-    const { password, ...others } = user._doc;
+    // const { password, ...others } = user._doc;
     // const userRes = others._doc;
 
-    res.status(200).json({ user, others, accessToken });
+    // json({ user, others, accessToken });
+    /* res.cookie("jwt", accessToken, {
+        // expires: new Date(date.now() + 3000),
+        httpOnly: true
+      }); */
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).render("unAuthorized");
   }
 };
 

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DYEP | BACKEND</title>
+</head>
+<body>
+
+    <%- include('./partials/nav.ejs')  %>
+
+    <h1>Register</h1>
+    <h2>District Youth Employment portal</h2>
+
+    <div class="user-form content">
+        <form action="/user/register" method="POST">
+            <label for="email">email</label>
+            <input type="text" id="email" name="email" required>
+            <label for="username">username</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">password</label>
+            <input type="text" id="password" name="password" required>
+            <button type="menu">toggle</button>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <%- include('./partials/footer.ejs')  %>
+</body>
+</html>

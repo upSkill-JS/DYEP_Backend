@@ -5,13 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DYEP | BACKEND</title>
+    <link rel="stylesheet" href="/public/css/style.css">
 </head>
 <body>
-    <h1>Home</h1>
-    <h2>District Youth Employment portal</h2>
-    <nav>
-        <a href="/">Home Page</a>
-        <a href="/about">About Page</a>
-    </nav>
+    
+    <%- include('./partials/nav.ejs')  %>
+
+    <div class="jobs content">
+        <h2>All Jobs</h2>
+
+        <% if (jobs.length > 0) { %>
+            <% jobs.forEach( job => { %>
+
+                <h3 class="title"><%= job.title %></h3>
+                <h4 class="subtite"><%= job.job_profile %></h4>
+
+            <% }) %>
+        <% } else { %>
+            <p>Connection Error!</p>
+        <% } %>
+
+        <div class="about content">
+            <h2>All Jobs</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore illo mollitia consectetur nisi itaque ea cum, ab omnis, reprehenderit harum molestias aut atque unde ad quibusdam expedita sapiente voluptatum corporis.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore illo mollitia consectetur nisi itaque ea cum, ab omnis, reprehenderit harum molestias aut atque unde ad quibusdam expedita sapiente voluptatum corporis.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore illo mollitia consectetur nisi itaque ea cum, ab omnis, reprehenderit harum molestias aut atque unde ad quibusdam expedita sapiente voluptatum corporis.</p>
+        </div>
+
+        <h3>Handeler for Job details section is under construction...</h3>
+
+    </div>
+
+    <%- include('./partials/footer.ejs')  %>
 </body>
 </html>
