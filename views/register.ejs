@@ -16,12 +16,17 @@
     <div class="user-form content">
         <form action="/user/register" method="POST">
             <label for="email">email</label>
-            <input type="text" id="email" name="email" required>
+            <input type="text" id="email" name="email" required><br>
             <label for="username">username</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" required><br>
             <label for="password">password</label>
-            <input type="text" id="password" name="password" required>
-            <button type="menu">toggle</button>
+            <input type="text" id="password" name="password" required><br>
+            <label for="myFile">Select a DP</label>
+            <input type="file" id="myFile" name="avatar"><br>
+            <input type="radio" id="isAdmin" name="isAdmin" value=true>
+            <label for="isAdmin">Job Creator</label><br>
+            <input type="radio" id="notAdmin" name="isAdmin" value=false>
+            <label for="isAdmin">Job Seeker</label><br>
             <button type="submit">Submit</button>
         </form>
     </div>

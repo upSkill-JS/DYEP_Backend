@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import jobRoute from "./routes/job.js";
 import userRoute from "./routes/user.js";
 import morgan from "morgan";
@@ -12,6 +13,9 @@ const app = express();
 dotenv.config();
 app.use(cors());
 app.use(bodyParser.json({ extended: true }));
+
+// Cookie Parser Middleware
+app.use(cookieParser());
 
 // Setup Views
 app.set("view engine", "ejs");

@@ -2,9 +2,12 @@ import UserModel from "../models/userModel.js";
 import CryptoJS from "crypto-js"; // Tomorrow's task for Hashing password for storing it into DB
 import jwt from "jsonwebtoken";
 
+
 // REGISTRATION
 export const createUser = async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
+  console.log(req.file); //file
+
   const username = req.body.username;
   const email = req.body.email;
   const password = CryptoJS.AES.encrypt(
@@ -12,13 +15,14 @@ export const createUser = async (req, res) => {
     process.env.PASS_SEC
   ).toString();
   const isAdmin = req.body.isAdmin;
+  // console.log(isAdmin);
 
   const newUserModel = new UserModel({ username, email, password, isAdmin });
 
   try {
     await newUserModel.save(); // CRYPTO-JS
     // res.status(200).json(newUserModel);
-    res.redirect('/login');
+    res.redirect("/login");
   } catch (error) {
     // res.status(404).json({ message: error.message });
     console.log({ message: error.message });
@@ -30,7 +34,7 @@ export const loginUser = async (req, res) => {
   try {
     const user = await UserModel.findOne({ username: req.body.username });
     // console.log(user);
-    // !user && res.status(500).json("Wrong Credentials!"); 
+    // !user && res.status(500).json("Wrong Credentials!");
 
     const originalPassword = CryptoJS.AES.decrypt(
       user.password,
@@ -39,7 +43,7 @@ export const loginUser = async (req, res) => {
 
     // console.log(originalPassword, req.body.password);
 
-    if (originalPassword === req.body.password){
+    if (originalPassword === req.body.password) {
       const accessToken = jwt.sign(
         {
           id: user._id,
@@ -48,9 +52,16 @@ export const loginUser = async (req, res) => {
         process.env.JWT_SEC,
         { expiresIn: "3d" }
       );
-  
-      // console.log(accessToken);  
-      res.status(200).redirect("/job")
+
+      // console.log(accessToken);
+      const storedToken = req.cookies.refreshToken;
+      res
+        .status(200)
+        .cookie("refreshToken", accessToken, {
+          httpOnly: true,
+          sameSite: "strict",
+        })
+        .render("account", { accessToken, storedToken });
     }
 
     // const { password, ...others } = user._doc;
@@ -65,6 +76,7 @@ export const loginUser = async (req, res) => {
     res.status(500).render("unAuthorized");
   }
 };
+
 
 // UPDATE USER'S ACCOUNT
 export const updateAccount = async (req, res) => {
@@ -89,6 +101,18 @@ export const updateAccount = async (req, res) => {
   }
 };
 
+// GET ACCOUNT DETAILS
+export const getAccount = async (req, res) => {
+  try {
+    const accountDetail = await User.findById(req.params.id);
+    // return accountDetail;
+    res.status(200).json(accountDetail);
+  } catch (err) {
+    // return err;
+    res.status(500).json(err);
+  }
+}
+
 // DELETE USER'S ACCOUNT
 export const deleteAccount = async (req, res) => {
   try {
@@ -98,4 +122,3 @@ export const deleteAccount = async (req, res) => {
     res.status(500).json(err);
   }
 };
-
