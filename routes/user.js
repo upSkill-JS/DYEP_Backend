@@ -9,8 +9,6 @@ import {
 import { verifyTokenAndAuthorization } from "../controllers/verifyToken.js";
 import multer from "multer";
 
-const router = express.Router();
-
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./public/uploads/avatars/");
@@ -40,7 +38,9 @@ var avatarUpload = multer({
   fileFilter: fileFilter,
 });
 
-router.post("/register", avatarUpload.single("avatar"), createUser);
+const router = express.Router();
+
+router.post("/register", avatarUpload.single('avatar'), createUser);
 router.post("/login", loginUser);
 router.get("/:id", verifyTokenAndAuthorization, getAccount);
 router.put("/:id", verifyTokenAndAuthorization, updateAccount);

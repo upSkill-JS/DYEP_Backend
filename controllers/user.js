@@ -2,7 +2,6 @@ import UserModel from "../models/userModel.js";
 import CryptoJS from "crypto-js"; // Tomorrow's task for Hashing password for storing it into DB
 import jwt from "jsonwebtoken";
 
-
 // REGISTRATION
 export const createUser = async (req, res) => {
   console.log(req.body);
@@ -14,10 +13,17 @@ export const createUser = async (req, res) => {
     req.body.password,
     process.env.PASS_SEC
   ).toString();
+  const avatar = req.file.path;
   const isAdmin = req.body.isAdmin;
   // console.log(isAdmin);
 
-  const newUserModel = new UserModel({ username, email, password, isAdmin });
+  const newUserModel = new UserModel({
+    username,
+    email,
+    password,
+    avatar,
+    isAdmin,
+  });
 
   try {
     await newUserModel.save(); // CRYPTO-JS
@@ -77,7 +83,6 @@ export const loginUser = async (req, res) => {
   }
 };
 
-
 // UPDATE USER'S ACCOUNT
 export const updateAccount = async (req, res) => {
   if (req.body.password) {
@@ -111,7 +116,7 @@ export const getAccount = async (req, res) => {
     // return err;
     res.status(500).json(err);
   }
-}
+};
 
 // DELETE USER'S ACCOUNT
 export const deleteAccount = async (req, res) => {
